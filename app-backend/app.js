@@ -18,12 +18,14 @@ app.get("/api/jwt", (req, res) => {
     iss: connectedAppClientId,
     aud: "tableau",
     sub: user,
-    scope: "tableau:views:embed, tableau:metrics:embed",
+    scp: ["tableau:views:embed", "tableau:metrics:embed"],
   };
 
   var jwt = nJwt.create(claims, connectedAppSecretKey);
   jwt.setExpiration(new Date().getTime() + 60 * 60 * 1000); // One hour from now
-  res.send(jwt);
+  jwt.setHeader("kid", connectedAppSecretId);
+  jwt.setHeader("iss", connectedAppClientId);
+  res.send(jwt.compact());
 });
 
 app.listen(port, () => {

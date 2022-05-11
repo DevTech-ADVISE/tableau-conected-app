@@ -1,28 +1,35 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const serverUrl = "https://public.tableau.com/views/Superstore_24/Overview";
 
 function App() {
+  const [token, setToken] = useState(null);
+
   useEffect(() => {
-    console.log("loaded");
+    axios.get("/api/jwt").then((res) => {
+      const jwt = res.data;
+      setToken(jwt);
+    });
   }, []);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>Let's see if this loads</p>
+      {token ? (
+        <tableau-viz
+          id="tableauViz"
+          src={serverUrl}
+          device="phone"
+          toolbar="bottom"
+          //token={token}
+          hide-tabs
+        ></tableau-viz>
+      ) : (
+        <p>Not loaded</p>
+      )}
     </div>
   );
 }

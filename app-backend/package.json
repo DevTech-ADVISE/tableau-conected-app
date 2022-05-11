@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
-    "njwt": "^1.2.0"
+    "njwt": "^1.2.0",
+    "secure-random": "^1.1.2"
   }
 }
