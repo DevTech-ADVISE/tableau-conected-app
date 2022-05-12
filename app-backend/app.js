@@ -22,7 +22,7 @@ app.get("/api/jwt", (req, res) => {
   };
 
   var jwt = nJwt.create(claims, connectedAppSecretKey);
-  jwt.setExpiration(new Date().getTime() + 60 * 60 * 1000); // One hour from now
+  jwt.setExpiration(new Date().getTime() + 5 * 60 * 1000); // 5 minutes from now
   jwt.setHeader("kid", connectedAppSecretId);
   jwt.setHeader("iss", connectedAppClientId);
   res.send(jwt.compact());
