@@ -21,33 +21,19 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-/*app.get("/api/jwt", (req, res) => {
-  let claims = {
-    iss: connectedAppClientId,
-    aud: "tableau",
-    sub: user,
-    scp: ["tableau:views:embed", "tableau:metrics:embed"],
-  };
-
-  var jwt = nJwt.create(claims, connectedAppSecretKey);
-  jwt.setExpiration(new Date().getTime() + 5 * 60 * 1000); // 5 minutes from now
-  jwt.setHeader("kid", connectedAppSecretId);
-  jwt.setHeader("iss", connectedAppClientId);
-  res.send(jwt.compact());
-});*/
-
 app.get("/api/jwt", (req, res) => {
-  var header = {
+  const header = {
     alg: "HS256",
     typ: "JWT",
     iss: connectedAppClientId,
     kid: connectedAppSecretId,
   };
 
-  var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
-  var encodedHeader = base64url(stringifiedHeader);
+  const encodedHeader = base64url(
+    CryptoJS.enc.Utf8.parse(JSON.stringify(header))
+  );
 
-  var claimSet = {
+  const claimSet = {
     sub: user,
     aud: "tableau",
     nbf: Math.round(new Date().getTime() / 1000) - 100,
@@ -57,12 +43,14 @@ app.get("/api/jwt", (req, res) => {
     exp: Math.round(new Date().getTime() / 1000) + 100,
   };
 
-  var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(claimSet));
-  var encodedData = base64url(stringifiedData);
-  var token = encodedHeader + "." + encodedData;
-  var signature = CryptoJS.HmacSHA256(token, connectedAppSecretKey);
-  signature = base64url(signature);
-  var signedToken = token + "." + signature;
+  const encodedData = base64url(
+    CryptoJS.enc.Utf8.parse(JSON.stringify(claimSet))
+  );
+  const token = encodedHeader + "." + encodedData;
+  const signature = base64url(
+    CryptoJS.HmacSHA256(token, connectedAppSecretKey)
+  );
+  const signedToken = token + "." + signature;
   res.send(signedToken);
 });
 
