@@ -7,7 +7,14 @@ const secureRandom = require("secure-random");
 const connectedAppSecretKey = "string"; //
 const connectedAppClientId = "string"; // Create a highly random byte array of 256 bytes
 const connectedAppSecretId = "string";
-const user = "username"; //would use sso for this
+const user = "string"; //would use sso for this
+const base64url = (source) => {
+  encodedSource = CryptoJS.enc.Base64.stringify(source);
+  encodedSource = encodedSource.replace(/=+$/, "");
+  encodedSource = encodedSource.replace(/\+/g, "-");
+  encodedSource = encodedSource.replace(/\//g, "_");
+  return encodedSource;
+};
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
