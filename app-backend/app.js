@@ -5,10 +5,10 @@ const nJwt = require("njwt");
 const CryptoJS = require("crypto-js");
 const secureRandom = require("secure-random");
 
-const connectedAppSecretKey = "2kIdGlWiG+99DFEmBToWQBE0rfM13WLVM57zEV7MF6c="; //
-const connectedAppClientId = "9831dc4f-60c8-4362-80f6-90dd8fb83ce9"; // Create a highly random byte array of 256 bytes
-const connectedAppSecretId = "3fab4d21-ad75-4c07-9424-8aa79f6d68f7";
-const user = "svalluru@usaid.gov"; //would use sso for this
+const connectedAppSecretKey = "string"; //
+const connectedAppClientId = "string"; // Create a highly random byte array of 256 bytes
+const connectedAppSecretId = "string";
+const user = "string"; //would use sso for this
 const base64url = (source) => {
   encodedSource = CryptoJS.enc.Base64.stringify(source);
   encodedSource = encodedSource.replace(/=+$/, "");
