@@ -14,18 +14,36 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/jwt", (req, res) => {
-  let claims = {
+  const header = {
+    alg: "HS256",
+    typ: "JWT",
     iss: connectedAppClientId,
-    aud: "tableau",
-    sub: user,
-    scp: ["tableau:views:embed", "tableau:metrics:embed"],
+    kid: connectedAppSecretId,
   };
 
-  var jwt = nJwt.create(claims, connectedAppSecretKey);
-  jwt.setExpiration(new Date().getTime() + 5 * 60 * 1000); // 5 minutes from now
-  jwt.setHeader("kid", connectedAppSecretId);
-  jwt.setHeader("iss", connectedAppClientId);
-  res.send(jwt.compact());
+  const encodedHeader = base64url(
+    CryptoJS.enc.Utf8.parse(JSON.stringify(header))
+  );
+
+  const claimSet = {
+    sub: user,
+    aud: "tableau",
+    nbf: Math.round(new Date().getTime() / 1000) - 100,
+    jti: new Date().getTime().toString(),
+    iss: connectedAppClientId,
+    scp: ["tableau:views:embed", "tableau:metrics:embed"],
+    exp: Math.round(new Date().getTime() / 1000) + 100,
+  };
+
+  const encodedData = base64url(
+    CryptoJS.enc.Utf8.parse(JSON.stringify(claimSet))
+  );
+  const token = encodedHeader + "." + encodedData;
+  const signature = base64url(
+    CryptoJS.HmacSHA256(token, connectedAppSecretKey)
+  );
+  const signedToken = token + "." + signature;
+  res.send(signedToken);
 });
 
 app.listen(port, () => {
